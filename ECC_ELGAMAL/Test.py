@@ -8,14 +8,11 @@ from ecc.curve import secp256k1, Point, Curve
 from ecc.key import gen_keypair
 from ecc.cipher import ElGamal
 
-
-
-
 PK_NAME = 'Public_key.txt'
 SK_NAME = 'Private_key.txt'
 GE_NAME = 'Generator.txt'
 CI_NAME = 'Ciphertext.txt'
-DE_NAME = 'Decrypted_Text.txt'
+DE_NAME = 'decryped_Text.txt'
 
 CURVE_TYPE = secp256k1
 MAX_ENCODE_LEN = 25
@@ -49,7 +46,7 @@ def CreatePkSKfile(pk, sk, gen):
                     file_GE.write(str(gen))
                     print("generator generated \n")
                     print("Your generator is create in random, the value is:"+ str(gen) + "\nOr you can check in the Generator.txt\n")
-                    print("-----------------------------------")
+
 def mkdir(path):
         path=path.strip() #remove first space
         path=path.rstrip("//") # remove last "/"
@@ -72,7 +69,7 @@ def ecc_main():
 
     #see whether is pk or sk is empty
     if os.path.getsize(PK_NAME) == 0 or os.path.getsize(SK_NAME) == 0: 
-        print("Nothing in the pk or sk file, regenerating public key and secrity key")
+        print("pk or sk files are empty, generating public key and secrity key in random")
         pri_key, pub_key, generatorG = gen_keypair(CURVE_TYPE)
         CreatePkSKfile(pub_key, pri_key,generatorG)
         
@@ -90,10 +87,10 @@ def ecc_main():
     vList = []
     RandBList = []
 
-    print("\n------------------- Encription -----------------\n")
-    print("\nThe Eliptic Curves You Used is secp256k1-----------------\n")
+    print("\n------------------------ Encryption ----------------------\n")
+    print("\n---------The Eliptic Curves You used is secp256k1---------\n")
     plaintext = input("What message you want to encrypt:")
-    print("\nYour message that going to be encript is \n"+plaintext+'\n')
+    print("\nYour message that going to be encrypt is \n"+plaintext+'\n')
     plainlist = cut(plaintext.encode('utf-8'), MAX_ENCODE_LEN)
     Cipher_Instance = ElGamal(pub_key.curve)
 
@@ -110,36 +107,36 @@ def ecc_main():
                 file_Ciphertext.writelines(WritePointObj(u))
                 file_Ciphertext.writelines(WritePointObj(v))
                 file_GE.write(str(RandB)+'\n')   
-    print('Finish Encription!\n')
+    print('Finish encryption!\n')
     
-    #Decription
+    #decryption
     #Read sk
-    decriptlist = []
-    print("\n------------------- Decription -----------------\n")
+    decryptlist = []
+    print("\n------------------------ Decryption ------------------------\n")
     with open(os.getcwd()+'//'+SK_NAME,'r') as file_SK:
             pri_key = int(file_SK.read())
-            print("Find the private key")
+            print("Found the private key")
             
     for u,v in zip(uList,vList):
-        decriptText = Cipher_Instance.decrypt(pri_key, u, v).decode('utf-8')
-        decriptlist.append(str(decriptText))
+        decryptText = Cipher_Instance.decrypt(pri_key, u, v).decode('utf-8')
+        decryptlist.append(str(decryptText))
         
-    decriptText = ''.join(decriptlist)
+    decryptText = ''.join(decryptlist)
         
     with open(os.getcwd()+'//'+DE_NAME,'w') as file_DE:
-        file_DE.write(decriptText)
-    print("Your decript message is :\n"+decriptText)
+        file_DE.write(decryptText)
+    print("Your decrypt message is :\n"+decryptText)
 
     create = input("""Do you want to keep information?\n
              1.Keep And Save in the current Path.\n
              2.Keep And Create a new Path to Save them.\n
              3.Keep Private/Public key and Generator in this Current Path, and Copy All file in a New Path.\n
-             4.Just Keep Private/Public key and Generator
+             4.Just Keep Private/Public key and Generator\n
              5.Delete them.\n""")
     if create == str(1):
         print("DONE")
     elif create == str(2):
-        filename = input("What file name you want to create:")
+        filename = input("What file name do you want to create:")
         mkdir(os.getcwd()+'//'+filename)
         shutil.move(os.getcwd()+'//'+PK_NAME,os.getcwd()+'//'+filename)
         shutil.move(os.getcwd()+'//'+SK_NAME,os.getcwd()+'//'+filename)
@@ -148,7 +145,7 @@ def ecc_main():
         shutil.move(os.getcwd()+'//'+DE_NAME,os.getcwd()+'//'+filename)
         print("DONE")
     elif create == str(3):
-        filename = input("What file name you want to create:")
+        filename = input("What file name do you want to create:")
         mkdir(os.getcwd()+'//'+filename)
         shutil.move(os.getcwd()+'//'+PK_NAME,os.getcwd()+'//'+filename)
         shutil.move(os.getcwd()+'//'+SK_NAME,os.getcwd()+'//'+filename)
