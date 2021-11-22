@@ -10,5 +10,10 @@ It is base on Secp256k1 Curves. It support setup Private Key and Generator by yo
 Please create **Private_key.txt** and **Generator.txt** in the "ECC_ELGAMAL" folder and input the Private Key and Generator in these files.  
 After finishing encryption and decryption, it will have the choise whether to delete the .txt files.  
 
+## OUTPUT
+Have already include two output folders:  
+-Test Case 1: Plaintext: I am an undergraduate student at queen’s university.  
+-Test Cast 2: plaintext: (your full name)
+
 ## Reference
 https://github.com/lc6chang/ecc-pycrypto  
